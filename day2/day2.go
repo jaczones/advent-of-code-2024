@@ -6,9 +6,35 @@ import (
 	"strings"
 )
 
-func Day2Part1(content string) {
+func isSafeLevel(numbers []int) bool {
+	if len(numbers) < 2 {
+		return false
+	}
+
+	isIncreasing := true
+	isDecreasing := true
+
+	for i := 1; i < len(numbers); i++ {
+		diff := numbers[i] - numbers[i-1]
+
+		if diff < -3 || diff > 3 || diff == 0 {
+			return false
+		}
+
+		if diff > 0 {
+			isDecreasing = false
+		} else if diff < 0 {
+			isIncreasing = false
+		}
+	}
+
+	return isIncreasing || isDecreasing
+}
+
+func Day2Part2(content string) {
 	rows := strings.Split(strings.TrimSpace(content), "\n")
 	var safeReports int
+	var fixedReports int
 
 	for _, row := range rows {
 		levels := strings.Fields(row)
@@ -27,41 +53,25 @@ func Day2Part1(content string) {
 			numbers = append(numbers, num)
 		}
 
-		isIncreasing := true
-		isDecreasing := true
-		isSafeLevel := true
-
-		for i := 1; i < len(numbers); i++ {
-			diff := numbers[i] - numbers[i-1]
-
-			if diff < -3 || diff > 3 || diff == 0 {
-				fmt.Printf("❌ Unsafe diff of %d between %d and %d\n", diff, numbers[i-1], numbers[i])
-				isSafeLevel = false
-				break
-			}
-
-			// Track whether the report is increasing or decreasing
-			if diff > 0 {
-				isDecreasing = false
-			} else if diff < 0 {
-				isIncreasing = false
-			}
-
-			// If both increasing and decreasing are false, the report is not safe
-			if !isIncreasing && !isDecreasing {
-				fmt.Println("❌ Unsafe report: numbers do not consistently increase/decrease")
-				isSafeLevel = false
-				break
-			}
+		if isSafeLevel(numbers) {
+			safeReports++
+			fmt.Println("✅ Safe report:", numbers)
+			continue
 		}
 
-		if isSafeLevel {
-			fmt.Println("✅ Safe report:", numbers)
-			safeReports++
-		} else {
-			fmt.Println("❌ Unsafe report:", numbers)
+		// Try removing each number and check if it becomes safe
+		for i := 0; i < len(numbers); i++ {
+			tempNumbers := append([]int{}, numbers[:i]...)
+			if i+1 < len(numbers) {
+				tempNumbers = append(tempNumbers, numbers[i+1:]...)
+			}
+
+			if isSafeLevel(tempNumbers) {
+				fixedReports++
+				break
+			}
 		}
 	}
 
-	fmt.Println("Total Safe Reports:", safeReports)
+	fmt.Println("Total Safe Reports:", safeReports+fixedReports)
 }
