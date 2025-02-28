@@ -60,7 +60,6 @@ func Day3Part2(content string) {
 		}
 	}
 
-	// Sort matches by order in the string
 	sort.Slice(matches, func(i, j int) bool {
 		return matches[i].Index < matches[j].Index
 	})
