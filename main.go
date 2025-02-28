@@ -43,5 +43,5 @@ func main() {
 		fmt.Println("Error:", err)
 		return
 	}
-	day3.Day3Part1(content)
+	day3.Day3Part2(content)
 }
