@@ -1,7 +1,7 @@
 package main
 
 import (
-	"advent-of-code/day2"
+	"advent-of-code/day3"
 	"fmt"
 	"io"
 	"net/http"
@@ -36,12 +36,12 @@ func FetchWebPage(url, sessionCookie string) (string, error) {
 
 func main() {
 	sessionCookie := os.Getenv("SESSION_COOKIE")
-	url := "https://adventofcode.com/2024/day/2/input"
+	url := "https://adventofcode.com/2024/day/3/input"
 
 	content, err := FetchWebPage(url, sessionCookie)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	day2.Day2Part2(content)
+	day3.Day3Part1(content)
 }
